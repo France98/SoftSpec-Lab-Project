@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.support.v7.widget.RecyclerView
+import android.text.Html
 import android.text.Layout
 import android.view.LayoutInflater
 import android.view.View
@@ -51,12 +52,14 @@ class FeedAdapter(private val rssObject: RSSObject, private val mContexT:Context
 
     override fun onBindViewHolder(holder: FeedViewHolder, position: Int) {
         holder.itemView.textTitle.text = rssObject.items[position].title
-        holder.itemView.textContent.text = rssObject.items[position].content
+//        holder.itemView.textContent.text = rssObject.items[position].content
+        holder.itemView.textContent.setText(Html.fromHtml(rssObject.items[position].content))
         holder.itemView.textPubdate.text = rssObject.items[position].pubDate
 
         holder.setItemClickListener(ItemClickListener{view ,position, isLongClick ->
             if(!isLongClick){
                 val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(rssObject.items[position].link))
+                browserIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                 mContexT.startActivity(browserIntent)
             }
         })

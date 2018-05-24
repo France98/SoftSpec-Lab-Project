@@ -13,11 +13,11 @@ import com.example.france98.finalproject.Model.RSSObject
 import com.google.gson.Gson
 
 import kotlinx.android.synthetic.main.activity_main.*
+import java.net.URL
 
 class MainActivity : AppCompatActivity() {
 
-    private val RSS_LINK = "https%3A%2F%2Fwww.theguardian.com%2Finternational%2Frss"
-    private val RSS_to_JSON = "https://api.rss2json.com/v1/api.json?rss_url="
+    private val RSS_to_JSON = "https://api.rss2json.com/v1/api.json?rss_url=http%3A%2F%2Froyalroadl.com%2Fsyndication%2F10286"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,13 +34,9 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun loadRSS(){
-        val loadRSSsync = object:AsyncTask<String,String,String>() {
+        object:AsyncTask<String,Void,String>() {
             internal var mDialog = ProgressDialog(this@MainActivity)
 
-            override fun onPreExecute() {
-                mDialog.setMessage("Please wait...")
-                mDialog.show()
-            }
 
             override fun onPostExecute(result: String?) {
                 mDialog.dismiss()
@@ -54,14 +50,11 @@ class MainActivity : AppCompatActivity() {
             override fun doInBackground(vararg p0: String?): String {
                 val result:String
                 val http = HTTPDataHandler()
-                result = http.getHTTPDataHandler(p0[0])
+                result = http.getHTTPDataHandler(RSS_to_JSON)
                 return result
             }
-        }
+        }.execute()
 
-        val url_get_data = StringBuilder(RSS_to_JSON)
-        url_get_data.append(RSS_LINK)
-        loadRSSsync.execute(url_get_data.toString())
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
